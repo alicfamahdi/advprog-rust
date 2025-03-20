@@ -122,4 +122,19 @@ If you enter the / URI a few times, as before, you’ll see it respond quickly. 
 
 This happens because the server is blocking—it processes requests one at a time (or with limited concurrency).
 </details>
+<details>
+<summary>Commit 5 Reflection</summary>
+
+5. Try to understand how the ThreadPool works.
+
+The thread pool in my Rust server allows multiple requests to be handled concurrently without creating an unlimited number of threads. 
+
+The way it works:
+- Creates up to 4 worker threads (ThreadPool::new()).
+- Receives incoming connections.
+- Sends jobs to workers using a queue (mpsc::channel).
+- Workers execute jobs in parallel.
+- If all workers are busy, requests wait in the queue.
+
+</details>
 </html>
