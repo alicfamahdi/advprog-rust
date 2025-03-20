@@ -109,5 +109,17 @@ Refactoring is needed because the initial if else clauses have a lot of repetiti
 
 This makes it easier to see the difference between the two cases, and it means we have only one place to update the code if we want to change how the file reading and response writing work. 
 </details>
-</html>
+<details>
+<summary>Commit 4 Reflection</summary>
 
+4. Let’s open two of browser windows, try 127.0.0.1/sleep in one of them, and try in other windows 127.0.0.1. Pay attention that the browser take some time to load. You can imagine if many users try to access it. See how it works and try to understand why it works like that.
+
+The first arm is the same as the if block from our previous code. The second arm matches a request to /sleep. When that request is received, the server will sleep for 5 seconds before rendering the successful HTML page. The third arm is the same as the else block from the previous code.
+
+This reveals that our server is quite primitive, as real libraries would handle the recognition of multiple requests in a more elegant way.
+
+If you enter the / URI a few times, as before, you’ll see it respond quickly. But if you enter /sleep and then load /, you’ll see that / waits until sleep has slept for its full 5 seconds before loading.
+
+This happens because the server is blocking—it processes requests one at a time (or with limited concurrency).
+</details>
+</html>
