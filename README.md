@@ -3,10 +3,10 @@
 <html lang="en">
 <details>
 <summary>Commit 1 Reflection</summary>
-You may need to check the Rust documentation to understand what is inside the
-handle_connection method. Write as reflection notes in the Readme.md. Write it nicely.
 
-- What is inside the handle_connection method?
+1. You may need to check the Rust documentation to understand what is inside the handle_connection method. Write as reflection notes in the Readme.md. Write it nicely.
+
+What is inside the handle_connection method?
 I'll start from the function signature:
 
 ```rust
@@ -40,5 +40,60 @@ println!("Request: {:#?}", http_request);
 ```
 `println!` prints the collected HTTP request lines in an organized format (`{:#?}`). This helps in debugging by showing the full request received from the client.
 </details>
+
+<details>
+<summary>Commit 2 Reflection</summary>
+<img src="commit2.png" alt="html page message"> 
+
+2. You may need to read more regarding some of text that your program should write to the browser such “Content-Length” and others, check the chapter 20 or other resources on that. Write your own reflection of what you have learned about the new code the handle_connection.
+
+The new code no longer just reads the request and prints it—now it also sends an HTTP response. The function now reads an HTML file (`hello.html`) and sends its contents back as the response body.
+
+The code for reading the request is the same as before:
+```rust
+fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&mut stream);
+    let http_request: Vec<_> = buf_reader
+        .lines()
+        .map(|result| result.unwrap())
+        .take_while(|line| !line.is_empty())
+        .collect();
+```
+
+```rust
+let status_line = "HTTP/1.1 200 OK";
+```
+Defines the HTTP status line, which tells the client that the request was successful (`200 OK`).
+
+```rust
+let contents = fs::read_to_string("hello.html").unwrap();
+```
+Reads the file `"hello.html"` from disk. `.unwrap()` assumes the file exists and will crash the program if it doesn't.
+
+```rust
+let length = contents.len();
+```
+Calculates the length of the file in bytes (needed for the `Content-Length` header).
+
+```rust
+let response =
+    format!("{status_line}\r\nContent-Length:
+{length}\r\n\r\n{contents}");
+```
+Constructs the full HTTP response:
+  ```
+  HTTP/1.1 200 OK
+  Content-Length: <file size>
+  
+  <file contents>
+  ```
+`\r\n` (carriage return + newline) separates HTTP headers properly. The extra `\r\n\r\n` marks the end of the headers before sending the body.
+
+```rust
+stream.write_all(response.as_bytes()).unwrap();
+```
+Converts the response into bytes and writes it to the `stream`, sending it to the client. `.unwrap()` ensures the function panics if sending fails.
+</details>
+
 </html>
 
