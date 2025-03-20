@@ -94,6 +94,20 @@ stream.write_all(response.as_bytes()).unwrap();
 ```
 Converts the response into bytes and writes it to the `stream`, sending it to the client. `.unwrap()` ensures the function panics if sending fails.
 </details>
+<details>
+<summary>Commit 3 Reflection</summary>
+<img src="commit3.png" alt="404 page message"> 
 
+3. You better do up to the refactoring one, and you need to explain in your reflection notes, how
+to split between response and why the refactoring is needed. You also need to capture your
+own screen shot, with your own message.
+
+We can do splitting between responses by checking the request_line to see if it equals the request line of a GET request to the / path. If it does, the if block returns the contents of our `hello.html` file.
+If the request_line does not equal the GET request to the / path, it means we’ve received some other request. 
+
+Refactoring is needed because the initial if else clauses have a lot of repetition. They both read files and write the contents of the files to the stream. The only differences are the status line and the filename. The code can be more concise by pulling out those differences into separate if and else lines that will assign the values of the status line and the filename to variables; we can then use those variables unconditionally in the code to read the file and write the response.
+
+This makes it easier to see the difference between the two cases, and it means we have only one place to update the code if we want to change how the file reading and response writing work. 
+</details>
 </html>
 
