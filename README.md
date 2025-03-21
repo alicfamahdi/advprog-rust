@@ -137,4 +137,13 @@ The way it works:
 - If all workers are busy, requests wait in the queue.
 
 </details>
+<details>
+<summary>Commit Bonus Reflection</summary>
+
+Bonus: Try to create a function build as a replacement to new and compare.
+
+I modified the `new` function to return `Result` with a `Config` instance in the success case and an `Err` value in the error case. Also, instead of calling `panic!` when the ThreadPool size is less than or equal to zero, now the function returns an `Err` value, and the `Config` return value is wrapped in an `Ok`. 
+
+Returning an `Err` value from `Config::build` allows the `main` function to handle the `Result` value returned from the `build` function and exit the process more cleanly in the error case.
+</details>
 </html>
